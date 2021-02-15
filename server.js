@@ -6,6 +6,7 @@ const port = process.env.PORT || 4005;
 let runningMessage = 'Websocket server started on port ' + port;
 server = http.createServer(app)
 websocketServer = new WebSocket.Server({ server });
+var cors = require('cors');
 
 const bodyParser = require('body-parser')
 const db = require('./queries')
@@ -16,6 +17,12 @@ app.use(
     extended: true,
   })
 )
+
+app.use(cors({
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'x-access-token', 'XSRF-TOKEN'],
+  preflightContinue: false
+}))
 
 app.get('/', (req, res) => {
   console.log('API was successfully requested');
@@ -41,7 +48,7 @@ websocketServer.on('connection', (webSocketClient) => {
 });
 
 app.get('/users', db.getUsers)
-app.get('/users/:id', db.getUserById)
+app.get('/users/:username', db.getUserByUsername)
 
 server.listen(port, () => {
   console.log(runningMessage);

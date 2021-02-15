@@ -7,7 +7,7 @@ const pool = new Pool({
   port: 5432,
 })
 const getUsers = (request, response) => {
-  pool.query('SELECT * FROM account ORDER BY account_id ASC', (error, results) => {
+  pool.query('SELECT * FROM account ORDER BY account_username ASC', (error, results) => {
     if (error) {
       throw error
     }
@@ -15,10 +15,11 @@ const getUsers = (request, response) => {
   })
 }
 
-const getUserById = (request, response) => {
-  const id = parseInt(request.params.id)
+// seems like i cant change the function name ???
+const getUserByUsername = (request, response) => {
+  const username = request.params.username
 
-  pool.query('SELECT * FROM account WHERE account_id = $1', [id], (error, results) => {
+  pool.query('SELECT * FROM account WHERE account_username = $1', [username], (error, results) => {
     if (error) {
       throw error
     }
@@ -68,7 +69,7 @@ const deleteUser = (request, response) => {
 
 module.exports = {
   getUsers,
-  getUserById,
+  getUserByUsername,
   createUser,
   updateUser,
   deleteUser,
