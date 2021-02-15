@@ -25,7 +25,7 @@ websocketServer.on('connection', (webSocketClient) => {
           .clients
           .forEach(client => {
               //send the client the current message
-              client.send(`{ "message" : ${message} }`);
+              client.send(`${message}`);
           });
   });
 });
