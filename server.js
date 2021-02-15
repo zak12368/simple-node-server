@@ -7,6 +7,16 @@ let runningMessage = 'Websocket server started on port ' + port;
 server = http.createServer(app)
 websocketServer = new WebSocket.Server({ server });
 
+const bodyParser = require('body-parser')
+const db = require('./queries')
+
+app.use(bodyParser.json())
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+  })
+)
+
 app.get('/', (req, res) => {
   console.log('API was successfully requested');
   res.send(runningMessage);
@@ -29,6 +39,9 @@ websocketServer.on('connection', (webSocketClient) => {
           });
   });
 });
+
+app.get('/users', db.getUsers)
+app.get('/users/:id', db.getUserById)
 
 server.listen(port, () => {
   console.log(runningMessage);
