@@ -27,18 +27,20 @@ const getUserByUsername = (request, response) => {
   })
 }
 
-// not used for now ↓↓↓
 
 const createUser = (request, response) => {
-  const { name, email } = request.body
+  const { account_username, account_firstName, account_lastName, account_password } = request.body
 
-  pool.query('INSERT INTO users (name, email) VALUES ($1, $2)', [name, email], (error, results) => {
+  pool.query('INSERT INTO Account (Account_username, Account_firstName, Account_lastName, Account_password) VALUES ($1, $2, $3, $4)',
+   [account_username, account_firstName, account_lastName, account_password], (error, results) => {
     if (error) {
       throw error
     }
-    response.status(201).send(`User added with ID: ${result.insertId}`)
+    response.status(201).send(`User added`)
   })
 }
+
+// not used for now ↓↓↓
 
 const updateUser = (request, response) => {
   const id = parseInt(request.params.id)
