@@ -22,7 +22,6 @@ const getUsers = (request, response) => {
   })
 }
 
-// seems like i cant change the function name ???
 const getUserByUsername = (request, response) => {
   const username = request.params.username
 
@@ -33,7 +32,6 @@ const getUserByUsername = (request, response) => {
     response.status(200).json(results.rows)
   })
 }
-
 
 const createUser = (request, response) => {
   const { account_username, account_firstName, account_lastName, account_password } = request.body
