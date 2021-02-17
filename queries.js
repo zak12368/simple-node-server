@@ -1,6 +1,6 @@
 const Pool = require('pg').Pool
 const pool = new Pool({
-  user: "admin_exotik",
+  user: "admin_exotik@exotik-db",
   host: 'exotik-db.postgres.database.azure.com',
   database: 'exotik-db',
   password: 'T79?2m>(CkdMqC5N',
