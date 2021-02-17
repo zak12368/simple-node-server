@@ -1,10 +1,17 @@
 const Pool = require('pg').Pool
 const pool = new Pool({
-  user: "admin_exotik@exotik-db",
+//  pour utiliser ma BD locale
+//   user: 'postgres',
+//   host: 'localhost',
+//   database: 'projet 3',
+//   password: 'postgrespw',
+
   host: 'exotik-db.postgres.database.azure.com',
-  database: 'exotik-db',
+  database: "postgres",
+  user: 'admin_exotik@exotik-db',
   password: 'T79?2m>(CkdMqC5N',
-  port: 5432,
+
+  port: 5432
 })
 const getUsers = (request, response) => {
   pool.query('SELECT * FROM account ORDER BY account_username ASC', (error, results) => {
