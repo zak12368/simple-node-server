@@ -51,7 +51,13 @@ app.get('/users', db.getUsers)
 app.get('/users/:username', db.getUserByUsername)
 app.post('/users', db.createUser)
 app.put('/users/:id', db.updateUser)
-app.delete('/users/:id', db.deleteUser)
+app.delete('/users/:username', db.deleteUser)
+
+app.post('/connectedUsers', db.addConnectedUsers)
+app.get('/connectedUsers', db.getConnectedUsers)
+app.delete('/connectedUsers/:username', db.removeConnectedUser)
+app.get('/connectedUsers/:username', db.getConnectedUser)
+app.delete('/connectedSockets/:socketId', db.deleteBySocket)
 
 server.listen(port, () => {
   console.log(runningMessage);

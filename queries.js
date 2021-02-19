@@ -1,10 +1,11 @@
 const Pool = require('pg').Pool
 const pool = new Pool({
 //  pour utiliser ma BD locale
-//   user: 'postgres',
-//   host: 'localhost',
-//   database: 'projet 3',
-//   password: 'postgrespw',
+
+  // user: 'postgres',
+  // host: 'localhost',
+  // database: 'projet 3',
+  // password: 'postgrespw',
 
   host: 'exotik-db.postgres.database.azure.com',
   database: "postgres",
@@ -45,6 +46,59 @@ const createUser = (request, response) => {
   })
 }
 
+const addConnectedUsers = (request, response) => {
+  const account_username = request.body.account_username
+
+  pool.query('INSERT INTO Connected_Accounts (Account_username) VALUES ($1)', [account_username], (error, results) => {
+    if (error) {
+      throw error
+    }
+    response.status(201).send(results.rows)
+  })
+}
+
+const removeConnectedUser = (request, response) => {
+  const username = request.params.username
+
+  pool.query('DELETE FROM Connected_Accounts WHERE Account_username = $1', [username], (error, results) => {
+    if (error) {
+      throw error
+    }
+    response.status(200).json(results.rows)
+  })
+}
+
+const deleteBySocket = (request, response) => {
+  const socketId = request.params.socketId
+
+  pool.query('DELETE FROM Connected_Accounts WHERE websocket_id = $1', [socketId], (error, results) => {
+    if (error) {
+      throw error
+    }
+    response.status(200).send(`User deleted with ID: ${socketId}`)
+  })
+}
+
+const getConnectedUsers = (request, response) => {
+  pool.query('SELECT * FROM Connected_Accounts ORDER BY account_username ASC', (error, results) => {
+    if (error) {
+      throw error
+    }
+    response.status(200).json(results.rows)
+  })
+}
+
+const getConnectedUser = (request, response) => {
+  const username = request.params.username
+
+  pool.query('SELECT * FROM Connected_Accounts WHERE account_username = $1', [username], (error, results) => {
+    if (error) {
+      throw error
+    }
+    response.status(200).json(results.rows)
+  })
+}
+
 // not used for now ↓↓↓
 
 const updateUser = (request, response) => {
@@ -64,13 +118,13 @@ const updateUser = (request, response) => {
 }
 
 const deleteUser = (request, response) => {
-  const id = parseInt(request.params.id)
+  const username = request.params.username
 
-  pool.query('DELETE FROM users WHERE id = $1', [id], (error, results) => {
+  pool.query('DELETE FROM account WHERE account_username = $1', [username], (error, results) => {
     if (error) {
       throw error
     }
-    response.status(200).send(`User deleted with ID: ${id}`)
+    response.status(200).send(`User deleted with ID: ${username}`)
   })
 }
 
@@ -80,4 +134,9 @@ module.exports = {
   createUser,
   updateUser,
   deleteUser,
+  addConnectedUsers,
+  removeConnectedUser,
+  deleteBySocket,
+  getConnectedUsers,
+  getConnectedUser
 }
