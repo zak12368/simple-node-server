@@ -15,6 +15,9 @@ export class Application {
     constructor(@inject(Types.DatabaseController) private databaseController: DatabaseController) {
         this.app = express();
         this.config();
+        this.app.get( "/", ( req, res ) => {
+            res.send( "Hello world!" );
+        } );
 
         this.bindRoutes();
     }
