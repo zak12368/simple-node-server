@@ -11,8 +11,10 @@ const pool = new Pool({
   database: "dfqdc5eh5tnqp",
   user: 'ucwvuojbdwhurn',
   password: 'a3783d051846cad2b94e755727ed73c9921696f6ece0d22c9960e19b9889664f',
-
-  port: 5432
+  port: 5432,
+  ssl: {
+    rejectUnauthorized: false
+  }
 })
 const getUsers = (request, response) => {
   pool.query('SELECT * FROM account ORDER BY account_username ASC', (error, results) => {
