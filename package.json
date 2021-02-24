@@ -90,12 +90,5 @@
         "tslint-eslint-rules": "5.4.0",
         "tslint-microsoft-contrib": "6.2.0",
         "typescript": "~3.5.3"
-    },
-
-    "scripts": {
-        "start": "node dist/index.js",
-        "postinstall": "tsc",
-        "watch-node": "nodemon dist/index.js",
-        "watch-ts": "tsc -w"
     }
 }
