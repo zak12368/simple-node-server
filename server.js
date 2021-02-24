@@ -1,4 +1,4 @@
-const { addUser, removeUser, getUser, getUserInRoom } = require('./services/connectionManager')
+const { addUser, removeUser, getUser, getUserInRoom, disconnectUser } = require('./services/connectionManager')
 const { generatemsg } = require('./services/msgGenerator')
 
 const express = require('express');
@@ -41,15 +41,14 @@ app.get('/', (req, res) => {
 //when a websocket connection is established
 io.on('connection', (socket) => {
     console.log('a user connected');
+
     socket.on("joinRoom", ({ username, room }) => {
         addUser({ id: socket.id, username, room })
 
-        socket.join(room)
-            // socket.emit("message", generatemsg("Admin ,Welcome"))
-            // socket.broadcast.to(room).emit("message", `Admin ${user.username} has joined!`);
 
-
-
+        socket.join(room);
+        // socket.emit("message", generatemsg("Admin ,Welcome"))
+        // socket.broadcast.to(room).emit("message", `Admin ${user.username} has joined!`);
 
     })
 
@@ -62,16 +61,17 @@ io.on('connection', (socket) => {
     })
 
     socket.on("leaveRoom", (username, room) => {
-        const user = removeUser(username, room)
-            // console.log(user, 'diconnected')
-            // if (user) {
-            //     io.to(room).emit("message", generatemsg(`Admin ${user.username} A user  has left`))
-            // }
+        removeUser(username, room);
+        socket.leave(room);
+        // console.log(user, 'diconnected')
+        // if (user) {
+        //     io.to(room).emit("message", generatemsg(`Admin ${user.username} A user  has left`))
+        // }
 
     })
 
     socket.on("disconnect", () => {
-        const user = removeUser(username, 'Clobal');
+        disconnectUser(socket.id);
     });
 });
 

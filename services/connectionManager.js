@@ -1,4 +1,4 @@
-const connections = [];
+var connections = [];
 const addUser = ({ id, username, room }) => {
 
     // //vlidate data
@@ -38,6 +38,13 @@ const removeUser = (username, room) => {
     }
 
 }
+const disconnectUser = (socketId) => {
+    connections = connections.filter((user) => {
+        user.id === socketId;
+    });
+    console.log(socketId, 'left');
+    console.log(connections);
+}
 
 const getUser = (id) => {
     return connections.find((user) => {
@@ -60,5 +67,6 @@ module.exports = {
     addUser,
     removeUser,
     getUser,
-    getUserInRoom
+    getUserInRoom,
+    disconnectUser
 }
