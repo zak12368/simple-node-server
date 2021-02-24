@@ -5,8 +5,7 @@ import Types from './types';
 
 @injectable()
 export class Server {
-    private readonly appPort: string | number | boolean = this.normalizePort(process.env.PORT || '3000');
-    private readonly baseDix: number = 10;
+    private readonly appPort: string | number | boolean = (process.env.PORT || '3000');
     private server: http.Server;
 
     constructor(@inject(Types.Application) private application: Application) {}
@@ -17,22 +16,13 @@ export class Server {
         this.server = http.createServer(this.application.app);
 
         this.server.listen(this.appPort);
-        this.server.on('error', (error: NodeJS.ErrnoException) => this.onError(error));
+        //this.server.on('error', (error: NodeJS.ErrnoException) => this.onError(error));
         this.server.on('listening', () => this.onListening());
     }
 
-    private normalizePort(val: number | string): number | string | boolean {
-        const port: number = typeof val === 'string' ? parseInt(val, this.baseDix) : val;
-        if (isNaN(port)) {
-            return val;
-        } else if (port >= 0) {
-            return port;
-        } else {
-            return false;
-        }
-    }
 
-    private onError(error: NodeJS.ErrnoException): void {
+
+    /*private onError(error: NodeJS.ErrnoException): void {
         if (error.syscall !== 'listen') {
             throw error;
         }
@@ -49,7 +39,7 @@ export class Server {
             default:
                 throw error;
         }
-    }
+    }*/
 
     /**
      * Se produit lorsque le serveur se met à écouter sur le port.
