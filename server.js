@@ -1,3 +1,4 @@
+
 const { addUser, removeUser, getUser, getUserInRoom, disconnectUser } = require('./services/connectionManager')
 const { generatemsg } = require('./services/msgGenerator')
 
@@ -7,6 +8,7 @@ http = require("http");
 const port = process.env.PORT || 4005;
 let runningMessage = 'Websocket server started on port ' + port;
 server = http.createServer(app);
+let routes = require('./server/routes');
 
 const io = require("socket.io")(server, {
     cors: {
@@ -18,7 +20,6 @@ const io = require("socket.io")(server, {
 var cors = require('cors');
 
 const bodyParser = require('body-parser')
-const db = require('./queries')
 
 app.use(bodyParser.json())
 app.use(
@@ -37,6 +38,9 @@ app.get('/', (req, res) => {
     console.log('API was successfully requested');
     res.send(runningMessage);
 });
+
+app.use('/', routes);
+
 
 //when a websocket connection is established
 io.on('connection', (socket) => {
@@ -76,19 +80,6 @@ io.on('connection', (socket) => {
 });
 
 
-
-
-app.get('/users', db.getUsers)
-app.get('/users/:username', db.getUserByUsername)
-app.post('/users', db.createUser)
-app.put('/users/:id', db.updateUser)
-app.delete('/users/:username', db.deleteUser)
-
-app.post('/connectedUsers', db.addConnectedUsers)
-app.get('/connectedUsers', db.getConnectedUsers)
-app.delete('/connectedUsers/:username', db.removeConnectedUser)
-app.get('/connectedUsers/:username', db.getConnectedUser)
-app.delete('/connectedSockets/:socketId', db.deleteBySocket)
 
 server.listen(port, () => {
     console.log(runningMessage);
