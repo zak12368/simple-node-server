@@ -1,17 +1,19 @@
-var express = require('express');
-const db = require('../services/databaseService');
+var express = require('express')
+const dbUserAccount = require('../services/dbUserAccountService')
+const dbDrawing = require('../services/dbDrawingService')
 
 let router = express.Router();
 
-router.get('/users', db.getUsers)
-router.get('/users/:username', db.getUserByUsername)
-router.post('/users', db.createUser)
-router.put('/users/:id', db.updateUser)
-router.delete('/users/:username', db.deleteUser)
+router.get('/users', dbUserAccount.getUsers)
+router.get('/users/:username', dbUserAccount.getUserByUsername)
+router.post('/users', dbUserAccount.createUser)
+router.put('/users/:id', dbUserAccount.updateUser)
+router.delete('/users/:username', dbUserAccount.deleteUser)
+router.post('/connectedUsers', dbUserAccount.addConnectedUsers)
+router.get('/connectedUsers', dbUserAccount.getConnectedUsers)
+router.delete('/connectedUsers/:username', dbUserAccount.removeConnectedUser)
+router.get('/connectedUsers/:username', dbUserAccount.getConnectedUser)
 
-router.post('/connectedUsers', db.addConnectedUsers)
-router.get('/connectedUsers', db.getConnectedUsers)
-router.delete('/connectedUsers/:username', db.removeConnectedUser)
-router.get('/connectedUsers/:username', db.getConnectedUser)
+router.get('/drawings', dbDrawing.getDrawings)
 
 module.exports = router;
