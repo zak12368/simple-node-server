@@ -13,6 +13,5 @@ router.post('/connectedUsers', db.addConnectedUsers)
 router.get('/connectedUsers', db.getConnectedUsers)
 router.delete('/connectedUsers/:username', db.removeConnectedUser)
 router.get('/connectedUsers/:username', db.getConnectedUser)
-router.delete('/connectedSockets/:socketId', db.deleteBySocket)
 
 module.exports = router;
