@@ -17,7 +17,12 @@ const getDrawings = (request, response) => {
   pool
     .query('SELECT * FROM word_drawing_pair ORDER BY pair_id ASC ')
     .then((results) => {
+      if (results.rowCount == 0) {
+        response.status(status.NOT_FOUND).send('There is no drawings stored')
+      }
+      else {
         response.status(status.OK).json(results.rows)
+      }
     })
     .catch((error) => {
         response.status(status.NOT_FOUND).send('Error getting drawings')
@@ -62,8 +67,9 @@ const getDrawingByDifficulty = (request, response) => {
 const insertDrawing = (request, response) => {
   const word = request.body.word
   const drawing = request.body.drawing
+  const difficulty = request.body.difficulty // Easy/Medium/Hard, case sensitive
   pool
-    .query('INSERT INTO word_drawing_pair (word, drawing) VALUES ($1, $2)', [word, drawing])
+    .query('INSERT INTO word_drawing_pair (word, drawing) VALUES ($1, $2, $3)', [word, drawing, difficulty])
     .then((results) => {
         response.status(status.OK).json(results.rows)
     })
