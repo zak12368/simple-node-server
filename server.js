@@ -74,10 +74,6 @@ io.on('connection', (socket) => {
 
     })
 
-    socket.on("allo", () => {
-        io.emit("allo")
-    })
-
     socket.on("disconnect", () => {
         disconnectUser(socket.id);
     });
