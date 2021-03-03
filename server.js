@@ -10,11 +10,7 @@ let runningMessage = 'Websocket server started on port ' + port;
 server = http.createServer(app);
 let routes = require('./server/routes');
 
-const io = require("socket.io")(server, {
-    cors: {
-        origin: "http://localhost:4200",
-    }
-});
+const io = require("socket.io")(server);
 
 
 var cors = require('cors');
