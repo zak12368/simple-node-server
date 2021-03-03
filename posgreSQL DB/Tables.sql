@@ -22,5 +22,10 @@ Pair_id SERIAL,
 Word varchar(20) NOT NULL,
 Drawing json NOT NULL,
 PRIMARY KEY(Pair_id),
-UNIQUE (Pair_id, Word)
+UNIQUE (Word)
 );
+
+//test inserts
+INSERT INTO word_drawing_pair
+(word, drawing)
+VALUES ('testtest', '{ "testjson": "aaaa", "action": {"tool": "pencil","color": 6}}');

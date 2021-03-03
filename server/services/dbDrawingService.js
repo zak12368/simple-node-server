@@ -24,6 +24,20 @@ const getDrawings = (request, response) => {
     }) 
 }
 
+const insertDrawing = (request, response) => {
+  const word = request.body.word
+  const drawing = request.body.drawing
+  pool
+    .query('INSERT INTO word_drawing_pair (word, drawing) VALUES ($1, $2)', [word, drawing])
+    .then((results) => {
+        response.status(status.OK).json(results.rows)
+    })
+    .catch((error) => {
+        response.status(status.NOT_FOUND).send('Error inserting word-drawing pair')
+    }) 
+}
+
 module.exports = {
-    getDrawings
+    getDrawings,
+    insertDrawing
 }

@@ -15,5 +15,6 @@ router.delete('/connectedUsers/:username', dbUserAccount.removeConnectedUser)
 router.get('/connectedUsers/:username', dbUserAccount.getConnectedUser)
 
 router.get('/drawings', dbDrawing.getDrawings)
+router.post('/drawings', dbDrawing.insertDrawing)
 
 module.exports = router;
