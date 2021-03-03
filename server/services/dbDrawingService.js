@@ -15,7 +15,7 @@ const pool = new Pool({
 
 const getDrawings = (request, response) => {
   pool
-    .query('SELECT * FROM drawings ORDER BY word ASC',[])
+    .query('SELECT * FROM word_drawing_pair ORDER BY word ASC',[])
     .then((result) => {
         response.status(status.OK).json(results.rows)
     })
