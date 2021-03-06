@@ -1,3 +1,6 @@
+const request = require('request');
+
+
 var connections = [];
 const URL = "https://exotik-server.herokuapp.com/api/"
 const addUser = ({ id, username, room }) => {
