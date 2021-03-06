@@ -24,6 +24,29 @@ const addUser = ({ id, username, room }) => {
     //store user
     const user = { id, username, room };
     connections.push(user);
+
+    const options = {
+        url: URL + '/connectedUsers',
+        form: {
+            account_username: user.username,
+        }
+    };
+    
+    request.post(options, (err, res, body) => {
+        if (err) {
+            return console.log(err);
+        }
+        console.log('Status Code:', res.statusCode);
+    });
+
+
+
+    if(room == "Global"){
+        
+
+
+
+    }
     console.log(connections);
     return { user };
 }
