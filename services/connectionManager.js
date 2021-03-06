@@ -1,4 +1,5 @@
 var connections = [];
+const URL = "https://exotik-server.herokuapp.com/api/"
 const addUser = ({ id, username, room }) => {
 
     // //vlidate data
@@ -39,6 +40,19 @@ const removeUser = (username, room) => {
 
 }
 const disconnectUser = (socketId) => {
+
+    const u = connections.find(c=> c.id==socketId);
+    const urlDisconnectUser = "connectedUsers/" + u.username
+
+
+    request.delete(URL + urlDisconnectUser, (err, res, body) => {
+    if (err) {
+        return console.log(err);
+    }
+    console.log('Status Code:', res.statusCode);
+});
+
+
     connections = connections.filter((user) => {
         user.id === socketId;
     });

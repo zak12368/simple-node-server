@@ -1,6 +1,5 @@
 const { addUser, removeUser, getUser, getUserInRoom, disconnectUser } = require('./services/connectionManager')
 const { generatemsg } = require('./services/msgGenerator')
-
 const express = require('express');
 const app = express();
 http = require("http");
