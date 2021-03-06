@@ -1,4 +1,3 @@
-
 const { addUser, removeUser, getUser, getUserInRoom, disconnectUser } = require('./services/connectionManager')
 const { generatemsg } = require('./services/msgGenerator')
 
@@ -72,6 +71,14 @@ io.on('connection', (socket) => {
         //     io.to(room).emit("message", generatemsg(`Admin ${user.username} A user  has left`))
         // }
 
+    })
+
+
+    socket.on("mouseEvent", (ev) => {
+        let e = JSON.parse(ev);
+        if (e.roomId) {
+            io.to(e.roomId).emit("mouseEvent", ev);
+        }
     })
 
     socket.on("allo", () => {
