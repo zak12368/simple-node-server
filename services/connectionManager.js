@@ -100,10 +100,16 @@ const getUserInRoom = (room) => {
 
 }
 
+const getGameRoom = (socketId) => {
+    const u = connections.find(c => c.id == socketId && c.room.includes("Game"));
+    return u.room;
+}
+
 module.exports = {
     addUser,
     removeUser,
     getUser,
     getUserInRoom,
-    disconnectUser
+    disconnectUser,
+    getGameRoom
 }
