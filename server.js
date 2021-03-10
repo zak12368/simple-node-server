@@ -62,7 +62,8 @@ io.on('connection', (socket) => {
         }
     })
 
-    socket.on("leaveRoom", (username, room) => {
+    socket.on("exitRoom", ({ username, room }) => {
+        console.log('hello ?')
         removeUser(username, room);
         socket.leave(room);
 

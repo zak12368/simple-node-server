@@ -53,13 +53,15 @@ const addUser = ({ id, username, room }) => {
 
 
 const removeUser = (username, room) => {
-    const index = connections.findIndex((user) => {
-        return (user.username === username && user.room === room);
-    })
-    if (index !== -1) {
-        console.log(connections);
-        return connections.splice(index, 1)[0];
-    }
+    console.log('im in')
+    connections = connections.filter((user) => {
+        if (user.username == username && user.room == room) {
+            return false;
+        } else {
+            return true
+        }
+    });
+    console.log(connections);
 
 }
 const disconnectUser = (socketId) => {
