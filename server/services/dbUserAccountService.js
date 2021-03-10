@@ -21,83 +21,110 @@ const pool = new Pool({
 })
 
 const getUsers = (request, response) => {
-  pool.query('SELECT * FROM account ORDER BY account_username ASC', (error, results) => {
-    if (error) {
-      response.status(status.NOT_FOUND).send('Error getting users')
-      throw error
+  pool
+  .query('SELECT * FROM account ORDER BY account_username ASC')
+  .then((results) => {
+    if (results.rowCount == 0) {
+      response.status(status.NOT_FOUND).send('There are no users registered')
     }
-    response.status(status.OK).json(results.rows)
+    else {
+      response.status(status.OK).json(results.rows)
+    }
+  })
+  .catch((error) => {
+    response.status(status.NOT_FOUND).send('Error getting users')
   })
 }
 
 const getUserByUsername = (request, response) => {
   const username = request.params.username
 
-  pool.query('SELECT * FROM account WHERE account_username = $1', [username], (error, results) => {
-    if (error) {
-      response.status(status.NOT_FOUND).send('Error getting user')
-      throw error
+  pool
+  .query('SELECT * FROM account WHERE account_username = $1', [username])
+  .then((results) => {
+    if(results.rowCount == 0) {
+      response.status(status.NOT_FOUND).send(`There is no user with username: ${username}`)
     }
-    response.status(status.OK).json(results.rows)
+    else {
+      response.status(status.OK).json(results.rows)
+    }
+  })
+  .catch((error) => {
+    response.status(status.NOT_FOUND).send('Error getting user')
   })
 }
 
 const createUser = (request, response) => {
   const { account_username, account_firstName, account_lastName, account_password } = request.body
 
-  pool.query('INSERT INTO Account (Account_username, Account_firstName, Account_lastName, Account_password) VALUES ($1, $2, $3, $4)',
-   [account_username, account_firstName, account_lastName, account_password], (error, results) => {
-    if (error) {
-      response.status(status.NOT_MODIFIED).send('Error inserting user')
-      throw error
-    }
+  pool
+  .query('INSERT INTO Account (Account_username, Account_firstName, Account_lastName, Account_password) VALUES ($1, $2, $3, $4)',
+   [account_username, account_firstName, account_lastName, account_password])
+  .then((results) => {
     response.status(status.ACCEPTED).json(results.rows)
+  })
+  .catch((error) => {
+    response.status(status.NOT_MODIFIED).send('Error inserting user')
   })
 }
 
 const addConnectedUsers = (request, response) => {
   const account_username = request.body.account_username
 
-  pool.query('INSERT INTO Connected_Accounts (Account_username) VALUES ($1)', [account_username], (error, results) => {
-    if (error) {
-      response.status(status.NOT_MODIFIED).send('Error inserting user')
-      throw error
-    }
+  pool
+  .query('INSERT INTO Connected_Accounts (Account_username) VALUES ($1)', [account_username]) 
+  .then((results) => {
     response.status(status.ACCEPTED).json(results.rows)
+  })
+  .catch((error) => {
+    response.status(status.NOT_MODIFIED).send('Error inserting user')
   })
 }
 
 const removeConnectedUser = (request, response) => {
   const username = request.params.username
 
-  pool.query('DELETE FROM Connected_Accounts WHERE Account_username = $1', [username], (error, results) => {
-    if (error) {
-      response.status(status.NOT_MODIFIED).send('Error deleting user')
-      throw error
-    }
+  pool
+  .query('DELETE FROM Connected_Accounts WHERE Account_username = $1', [username])
+  .then((results) => {
     response.status(status.OK).json(results.rows)
+  })
+  .catch((error) => {
+    response.status(status.NOT_MODIFIED).send('Error deleting user')
   })
 }
 
 const getConnectedUsers = (request, response) => {
-  pool.query('SELECT * FROM Connected_Accounts ORDER BY account_username ASC', (error, results) => {
-    if (error) {
-      response.status(status.NOT_FOUND).send('Error getting users')
-      throw error
+  pool
+  .query('SELECT * FROM Connected_Accounts ORDER BY account_username ASC')
+  .then((results) => {
+    if (results.rowCount == 0) {
+      response.status(status.NOT_FOUND).send('There are no connected user')
     }
-    response.status(status.OK).json(results.rows)
+    else {
+      response.status(status.OK).json(results.rows)
+    }
+  })
+  .catch((error) => {
+    response.status(status.NOT_FOUND).send('Error getting users')
   })
 }
 
 const getConnectedUser = (request, response) => {
   const username = request.params.username
 
-  pool.query('SELECT * FROM Connected_Accounts WHERE account_username = $1', [username], (error, results) => {
-    if (error) {
-      response.status(status.NOT_FOUND).send('Error getting user')
-      throw error
+  pool
+  .query('SELECT * FROM Connected_Accounts WHERE account_username = $1', [username])
+  .then((results) => {
+    if (results.rowCount == 0) {
+      response.status(status.NOT_FOUND).send(`No user with username:${username} is connected at the moment`)
     }
-    response.status(status.OK).json(results.rows)
+    else {
+      response.status(status.OK).json(results.rows)
+    }
+  })
+  .catch((error) => {
+    response.status(status.NOT_FOUND).send('Error getting user')
   })
 }
 
@@ -107,28 +134,26 @@ const updateUser = (request, response) => {
   const id = parseInt(request.params.id)
   const { name, email } = request.body
 
-  pool.query(
-    'UPDATE users SET name = $1, email = $2 WHERE id = $3',
-    [name, email, id],
-    (error, results) => {
-      if (error) {
-        response.status(status.NOT_FOUND).send('Error modifying user')
-        throw error
-      }
-      response.status(status.OK).send(`User modified with ID: ${id}`)
-    }
-  )
+  pool
+  .query('UPDATE users SET name = $1, email = $2 WHERE id = $3',[name, email, id])
+  .then((results)=> {
+    response.status(status.OK).send(`User modified with ID: ${id}`)
+  })
+  .catch((error)=> {
+    response.status(status.NOT_FOUND).send('Error modifying user')
+  })
 }
 
 const deleteUser = (request, response) => {
   const username = request.params.username
 
-  pool.query('DELETE FROM account WHERE account_username = $1', [username], (error, results) => {
-    if (error) {
-      response.status(status.NOT_FOUND).send('Error deleting user')
-      throw error
-    }
+  pool
+  .query('DELETE FROM account WHERE account_username = $1', [username])
+  .then((results) => {
     response.status(status.OK).send(`User deleted with ID: ${username}`)
+  })
+  .catch((error)=> {
+    response.status(status.NOT_FOUND).send('Error deleting user')
   })
 }
 
