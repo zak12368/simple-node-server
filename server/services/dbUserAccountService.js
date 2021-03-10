@@ -25,7 +25,8 @@ const getUsers = (request, response) => {
   .query('SELECT * FROM account ORDER BY account_username ASC')
   .then((results) => {
     if (results.rowCount == 0) {
-      response.status(status.NOT_FOUND).send('There are no users registered')
+      console.log('There are no users registered')
+      response.status(status.OK).json(results.rows)
     }
     else {
       response.status(status.OK).json(results.rows)
@@ -43,7 +44,8 @@ const getUserByUsername = (request, response) => {
   .query('SELECT * FROM account WHERE account_username = $1', [username])
   .then((results) => {
     if(results.rowCount == 0) {
-      response.status(status.NOT_FOUND).send(`There is no user with username: ${username}`)
+      console.log('There is no user')
+      response.status(status.OK).json(results.rows)
     }
     else {
       response.status(status.OK).json(results.rows)
@@ -99,7 +101,8 @@ const getConnectedUsers = (request, response) => {
   .query('SELECT * FROM Connected_Accounts ORDER BY account_username ASC')
   .then((results) => {
     if (results.rowCount == 0) {
-      response.status(status.NOT_FOUND).send('There are no connected user')
+      console.log('There are no connected user')
+      response.status(status.OK).json(results.rows)
     }
     else {
       response.status(status.OK).json(results.rows)
@@ -117,7 +120,8 @@ const getConnectedUser = (request, response) => {
   .query('SELECT * FROM Connected_Accounts WHERE account_username = $1', [username])
   .then((results) => {
     if (results.rowCount == 0) {
-      response.status(status.NOT_FOUND).send(`No user with username:${username} is connected at the moment`)
+      console.log('user is not connected at the moment')
+      response.status(status.OK).json(results.rows)
     }
     else {
       response.status(status.OK).json(results.rows)
