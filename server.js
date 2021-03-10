@@ -1,7 +1,5 @@
-
-const { addUser, removeUser, getUser, getUserInRoom, disconnectUser } = require('./services/connectionManager')
+const { addUser, removeUser, getUser, getUserInRoom, disconnectUser, getGameRoom } = require('./services/connectionManager')
 const { generatemsg } = require('./services/msgGenerator')
-
 const express = require('express');
 const app = express();
 http = require("http");
@@ -12,7 +10,7 @@ let routes = require('./server/routes');
 
 const io = require("socket.io")(server, {
     cors: {
-        origin: "http://localhost:4200",
+        origin: "*",
     }
 });
 
@@ -67,11 +65,48 @@ io.on('connection', (socket) => {
     socket.on("leaveRoom", (username, room) => {
         removeUser(username, room);
         socket.leave(room);
-        // console.log(user, 'diconnected')
-        // if (user) {
-        //     io.to(room).emit("message", generatemsg(`Admin ${user.username} A user  has left`))
-        // }
 
+    })
+
+
+    /*For real time drawing*/
+
+    socket.on("mouseEvent", (ev) => {
+        let e = JSON.parse(ev);
+        if (e.roomId) {
+            io.to(e.roomId).emit("mouseEvent", ev);
+        }
+    })
+
+    socket.on("colorChange", (data) => {
+        console.log(data)
+
+        let room = getGameRoom(socket.id);
+        console.log(room)
+
+        io.to(room).emit("colorChange", data);
+    })
+
+
+    socket.on("toolChange", (data) => {
+        console.log(data);
+        let room = getGameRoom(socket.id);
+        console.log(room);
+        io.to(room).emit("toolChange", data);
+    })
+    socket.on("thicknessChange", (data) => {
+        console.log(data);
+        let room = getGameRoom(socket.id);
+        console.log(room);
+        io.to(room).emit("thicknessChange", data);
+    })
+
+
+
+
+
+    socket.on("allo", () => {
+        io.emit("allo");
     })
 
     socket.on("disconnect", () => {

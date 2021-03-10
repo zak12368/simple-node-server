@@ -1,4 +1,8 @@
+const request = require('request');
+
+
 var connections = [];
+const URL = "https://exotik-server.herokuapp.com/api/"
 const addUser = ({ id, username, room }) => {
 
     // //vlidate data
@@ -23,6 +27,26 @@ const addUser = ({ id, username, room }) => {
     //store user
     const user = { id, username, room };
     connections.push(user);
+
+
+
+
+
+    if (room == "Global") {
+        const options = {
+            url: URL + '/connectedUsers',
+            form: {
+                account_username: user.username,
+            }
+        };
+
+        request.post(options, (err, res, body) => {
+            if (err) {
+                return console.log(err);
+            }
+            console.log('Status Code:', res.statusCode);
+        });
+    }
     console.log(connections);
     return { user };
 }
@@ -39,6 +63,19 @@ const removeUser = (username, room) => {
 
 }
 const disconnectUser = (socketId) => {
+
+    const u = connections.find(c => c.id == socketId);
+    const urlDisconnectUser = "connectedUsers/" + u.username
+
+
+    request.delete(URL + urlDisconnectUser, (err, res, body) => {
+        if (err) {
+            return console.log(err);
+        }
+        console.log('Status Code:', res.statusCode);
+    });
+
+
     connections = connections.filter((user) => {
         user.id === socketId;
     });
@@ -63,10 +100,16 @@ const getUserInRoom = (room) => {
 
 }
 
+const getGameRoom = (socketId) => {
+    const u = connections.find(c => c.id == socketId && c.room.includes("Game"));
+    return u.room;
+}
+
 module.exports = {
     addUser,
     removeUser,
     getUser,
     getUserInRoom,
-    disconnectUser
+    disconnectUser,
+    getGameRoom
 }
