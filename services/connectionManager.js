@@ -34,7 +34,7 @@ const addUser = ({ id, username, room }) => {
 
     if (room == "Global") {
         const options = {
-            url: URL + '/connectedUsers',
+            url: URL + 'connectedUsers',
             form: {
                 account_username: user.username,
             }
